@@ -5,6 +5,7 @@ import com.github.chinloyal.pusher_client.pusher.PusherService
 import com.pusher.client.channel.PresenceChannelEventListener
 import com.pusher.client.channel.PusherEvent
 import com.pusher.client.channel.User
+import com.google.gson.JsonObject
 import java.lang.Exception
 
 class FlutterPresenceChannelEventListener: FlutterBaseChannelEventListener(), PresenceChannelEventListener {
@@ -13,30 +14,33 @@ class FlutterPresenceChannelEventListener: FlutterBaseChannelEventListener(), Pr
     }
 
     override fun onUsersInformationReceived(channelName: String, users: MutableSet<User>) {
-        this.onEvent(PusherEvent(mapOf(
-                "event" to Constants.SUBSCRIPTION_SUCCEEDED.value,
-                "channel" to channelName,
-                "user_id" to null,
-                "data" to users.toString()
-        )))
+        val event = JsonObject().apply {
+            addProperty("event", Constants.SUBSCRIPTION_SUCCEEDED.value)
+            addProperty("channel", channelName)
+            add("user_id", null)
+            addProperty("data", users.toString())
+        }
+        this.onEvent(PusherEvent(event))
     }
 
     override fun userUnsubscribed(channelName: String, user: User) {
-        this.onEvent(PusherEvent(mapOf(
-                "event" to Constants.MEMBER_REMOVED.value,
-                "channel" to channelName,
-                "user_id" to user.id,
-                "data" to null
-        )))
+        val event = JsonObject().apply {
+            addProperty("event", Constants.MEMBER_REMOVED.value)
+            addProperty("channel", channelName)
+            addProperty("user_id", user.id)
+            add("data", null)
+        }
+        this.onEvent(PusherEvent(event))
     }
 
     override fun userSubscribed(channelName: String, user: User) {
-        this.onEvent(PusherEvent(mapOf(
-                "event" to Constants.MEMBER_ADDED.value,
-                "channel" to channelName,
-                "user_id" to user.id,
-                "data" to null
-        )))
+        val event = JsonObject().apply {
+            addProperty("event", Constants.MEMBER_ADDED.value)
+            addProperty("channel", channelName)
+            addProperty("user_id", user.id)
+            add("data", null)
+        }
+        this.onEvent(PusherEvent(event))
     }
 
     override fun onAuthenticationFailure(message: String, e: Exception) {
@@ -47,11 +51,12 @@ class FlutterPresenceChannelEventListener: FlutterBaseChannelEventListener(), Pr
     override fun onSubscriptionSucceeded(channelName: String) {
         PusherService.debugLog("[PRESENCE] Subscribed: $channelName")
 
-        this.onEvent(PusherEvent(mapOf(
-                "event" to Constants.SUBSCRIPTION_SUCCEEDED.value,
-                "channel" to channelName,
-                "user_id" to null,
-                "data" to null
-        )))
+        val event = JsonObject().apply {
+            addProperty("event", Constants.SUBSCRIPTION_SUCCEEDED.value)
+            addProperty("channel", channelName)
+            add("user_id", null)
+            add("data", null)
+        }
+        this.onEvent(PusherEvent(event))
     }
 }

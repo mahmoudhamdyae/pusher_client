@@ -7,6 +7,8 @@ import com.github.chinloyal.pusher_client.pusher.PusherService.Companion.debugLo
 import com.github.chinloyal.pusher_client.pusher.PusherService.Companion.eventSink
 import com.pusher.client.channel.ChannelEventListener
 import com.pusher.client.channel.PusherEvent
+import com.google.gson.JsonObject
+
 import org.json.JSONObject
 import java.lang.Exception
 
@@ -38,12 +40,13 @@ open class FlutterBaseChannelEventListener: ChannelEventListener {
     }
 
     override fun onSubscriptionSucceeded(channelName: String) {
-        this.onEvent(PusherEvent(mapOf(
-                "event" to Constants.SUBSCRIPTION_SUCCEEDED.value,
-                "channel" to channelName,
-                "user_id" to null,
-                "data" to null
-        )))
+        val event = JsonObject().apply {
+            addProperty("event", Constants.SUBSCRIPTION_SUCCEEDED.value)
+            addProperty("channel", channelName)
+            add("user_id", null)
+            add("data", null)
+        }
+        this.onEvent(PusherEvent(event))
         debugLog("[PUBLIC] Subscribed: $channelName")
 
     }
