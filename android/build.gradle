@@ -5,7 +5,7 @@ buildscript {
     ext.kotlin_version = '2.0.20'
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -17,7 +17,7 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -47,10 +47,10 @@ android {
         jvmTarget = '1.8'
     }
     dependencies {
-        implementation "com.pusher:pusher-java-client:2.2.5"
+        implementation "com.pusher:pusher-java-client:2.4.4"
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
